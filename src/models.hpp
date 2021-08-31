@@ -1,60 +1,64 @@
 #pragma once
 #include <raylib.h>
+#include <cmath>
 
-class Vec2{
-public:
-  Vector2 vec;
-  bool vecIsInit = false;
-};
-
-class Line{
-private:
-  Vec2 x;
-  Vec2 y;
-
-public:
-  Line(Vector2 _x, Vector2 _y){
-    setX(_x);
-    setY(_y);
+struct Vec2 : public Vector2{
+  Vector2 expose() const{
+    return (Vector2){x, y};
   }
 
-  Vector2 getX(){
-    if (x.vecIsInit)
-      return x.vec;
+  Vec2 operator+(const Vec2& other) const{
+    return (Vec2){x+other.x, y+other.y};
   }
 
-  Vector2 getY(){
-    if (y.vecIsInit)
-      return y.vec;
+  Vec2 operator-(const Vec2& other) const{
+    return (Vec2){x-other.x, y-other.y};
   }
 
-  void setX(Vector2 _x){
-    x.vec = _x;
-    x.vecIsInit = true;
+  Vec2 operator*(const Vec2& other) const{
+    return (Vec2){x*other.x, y*other.y};
   }
 
-  void setY(Vector2 _x){
-    x.vec = _x;
-    x.vecIsInit = true;
+  Vec2 operator/(const Vec2& other) const{
+    return (Vec2){x/other.x, y/other.y};
   }
 
-  Vector2 intersection(Line other){
-    Vector2 result;
-    Vector2 _x = {
-      x.vec.x - y.vec.x,
-      x.vec.y - y.vec.y
-    };
+  bool operator>(const Vec2& other) const{
+    if ((x*y) > (other.x*other.y))
+      return true;
+    return false;
+  }
 
-    Vector2 _y = {
-      other.getX().x - other.getY().x,
-      other.getX().y - other.getY().y
-    };
+  bool operator<(const Vec2& other) const{
+    return !operator>(other);
+  }
 
-    result = {
-      _x.x - _y.x,
-      _x.y - _y.y
-    };
+  double dotProduct(const Vec2& other) const{
+    return x*other.x+y*other.y;
+  }
+
+  double crossProduct(const Vec2& other) const{
+    return x+other.x*y+other.y;
+  }
+
+  Vec2 rotate(const double th) const{
+    Vec2 result;
+
+    result.x = cos(th) * this->x - sin(th) * this->y;
+    result.y = sin(th) * this->x + sin(th) * this->y;
 
     return result;
   }
+
+  Vec2 rotate(const double th, const Vec2& origin) const{
+    Vec2 newPoint = *this - origin;
+
+    return newPoint.rotate(th);
+  }
 };
+
+
+struct Circle{
+  Vec2 position;
+  Vec2 radius;
+}
