@@ -81,7 +81,7 @@ struct Circle{
 
   float signedDistance(const Vec2& point) const{
     return sqrt(
-      power2(position.x-point.x)+power2(position.y-point.y)
+      power2(pos.x-point.x)+power2(pos.y-point.y)
     ) - radius;
   }
 };
