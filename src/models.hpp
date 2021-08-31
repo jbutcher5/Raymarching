@@ -2,6 +2,8 @@
 #include <raylib.h>
 #include <cmath>
 
+#define power2(x) (x)*(x)
+
 struct Vec2 : public Vector2{
   Vector2 expose() const{
     return (Vector2){x, y};
@@ -60,5 +62,11 @@ struct Vec2 : public Vector2{
 
 struct Circle{
   Vec2 position;
-  Vec2 radius;
-}
+  float radius;
+
+  float signedDistance(const Vec2& point) const{
+    return sqrt(
+      power2(position.x-point.x)+power2(position.y-point.y)
+    ) - radius;
+  }
+};
