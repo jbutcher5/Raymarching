@@ -76,7 +76,7 @@ struct Vec2 : public Vector2{
 
 
 struct Circle{
-  Vec2 position;
+  Vec2 pos;
   float radius;
 
   float signedDistance(const Vec2& point) const{
