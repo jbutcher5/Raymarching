@@ -5,6 +5,21 @@
 #define power2(x) (x)*(x)
 
 struct Vec2 : public Vector2{
+  void set(const float x, const float y){
+    this->x = x;
+    this->y = y;
+  }
+
+  void set(const Vector2 x){
+    this->x = x.x;
+    this->y = x.y;
+  }
+
+  void set(const Vec2 x){
+    this->x = x.x;
+    this->y = x.y;
+  }
+
   Vector2 expose() const{
     return (Vector2){x, y};
   }
