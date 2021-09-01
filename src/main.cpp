@@ -1,11 +1,16 @@
 #include <raylib.h>
 #include <iostream>
 #include "models.hpp"
+#include <cmath>
+#include <vector>
+
 
 #define LOG(x) std::cout << x << std::endl
 #define screenWidth 800
 #define screenHeight 450
 #define screenTitle "[Example] Ray Marching"
+#define screenFPS 60
+
 
 Vector2 WtoS(Vector2 position){
   // Convert world space to screen space
@@ -15,26 +20,38 @@ Vector2 WtoS(Vector2 position){
   };
 }
 
-float WtoS(float pos, bool isWidth=false){
-  float sub = screenHeight/2;
-
-  if (isWidth)
-    sub = screenWidth/2;
-
-  return pos+sub;
-}
 
 int main(){
   Vec2 point;
   point.set(0., 1.);
-
+/*
   Circle x;
   x.radius = 25;
   x.pos.set(100., 20.);
 
-  InitWindow(screenWidth, screenHeight, screenTitle);
+  Circle y;
+  y.radius = 3;
+  y.pos.set(-100, 40);
+*/
 
-  SetTargetFPS(60);
+  std::vector<Circle> x;
+
+  x.push_back((Circle){25., 80., 20.});
+  x.push_back((Circle){25., 100., 100.});
+  x.push_back((Circle){30., -20., 40.});
+
+  float distance;
+
+  Display screen(
+    screenWidth,
+    screenHeight,
+    screenTitle,
+    screenFPS
+  );
+
+  // dangerous; pointers may change!
+  for (auto i : x)
+    screen.attachShape(&i);
 
   while (!WindowShouldClose()){
     if (IsKeyDown(KEY_RIGHT)) point.x += 2.0f;
@@ -42,15 +59,22 @@ int main(){
     if (IsKeyDown(KEY_UP)) point.y -= 2.0f;
     if (IsKeyDown(KEY_DOWN)) point.y += 2.0f;
 
+    distance = INFINITY;
+
+    for (auto i : x)
+      if (i.signedDistance(point) < distance)
+        distance = i.signedDistance(point);
+
     BeginDrawing();
     ClearBackground(RAYWHITE);
     DrawCircleV(WtoS(point.expose()), 2, RED);
-    DrawCircleV(WtoS(x.pos.expose()), x.radius, GREEN);
-    DrawCircleV(WtoS(point.expose()), x.signedDistance(point), (Color){20, 20, 200, 50});
+    DrawCircleV(WtoS(point.expose()), distance, (Color){20, 20, 200, 50});
+    screen.drawShape();
     EndDrawing();
+
   }
 
-  CloseWindow();
+  screen.closeScreen();
 
   return 0;
 }
