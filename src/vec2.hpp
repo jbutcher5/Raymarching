@@ -6,6 +6,14 @@
 
 
 struct Vec2 : public Vector2{
+  Vec2(){
+    set(0, 0);
+  }
+
+  Vec2(const float x, const float y){
+    set(x, y);
+  }
+
   void set(const float x, const float y){
     this->x = x;
     this->y = y;
