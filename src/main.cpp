@@ -16,8 +16,10 @@
 std::vector<Circle> raymarch(
   Vec2 point,
   const std::vector<Circle> objects,
-  const Vec2 direction
+  Vec2 direction
 ){
+  direction.y = -direction.y;
+
   std::vector<Circle> result;
 
   if (
@@ -71,8 +73,6 @@ int main(){
   x.push_back((Circle){25., 100., 100.});
   x.push_back((Circle){30., -20., 40.});
 
-  float distance;
-
   Display screen(
     screenWidth,
     screenHeight,
@@ -89,14 +89,15 @@ int main(){
     if (IsKeyDown(KEY_UP)) point.y -= 2.0f;
     if (IsKeyDown(KEY_DOWN)) point.y += 2.0f;
 
-    std::vector<Circle> traces = raymarch(point, x, (Vec2){1,0});
+    std::vector<Circle> traces = raymarch(point, x, (Vec2){1,1});
 
     BeginDrawing();
     ClearBackground(RAYWHITE);
     DrawCircleV(WtoS(point.expose()), 2, RED);
-    //DrawCircleV(WtoS(point.expose()), distance, (Color){20, 20, 200, 50});
+
     for (Circle i : traces)
       DrawCircleV(WtoS(i.pos.expose()), i.radius, (Color){20, 20, 200, 50});
+
     screen.drawShape();
     EndDrawing();
 
