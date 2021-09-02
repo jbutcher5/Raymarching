@@ -22,17 +22,7 @@ Vector2 WtoS(Vector2 position){
 
 
 int main(){
-  Vec2 point;
-  point.set(0., 1.);
-/*
-  Circle x;
-  x.radius = 25;
-  x.pos.set(100., 20.);
-
-  Circle y;
-  y.radius = 3;
-  y.pos.set(-100, 40);
-*/
+  Vec2 point = {0., 1.};
 
   std::vector<Circle> x;
 
@@ -49,8 +39,7 @@ int main(){
     screenFPS
   );
 
-  // dangerous; pointers may change!
-  for (auto i : x)
+  for (auto &i : x)
     screen.attachShape(&i);
 
   while (!WindowShouldClose()){
