@@ -7,6 +7,10 @@ struct Circle{
   Vec2 pos;
   float radius;
 
+  Circle(){
+    Circle(0., 0., 0.);
+  }
+
   Circle(float rad, float x, float y){
     this->radius = rad;
     this->pos.set(x, y);
