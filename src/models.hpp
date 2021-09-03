@@ -1,3 +1,3 @@
 #include "vec2.hpp"
-#include "circle.hpp"
+#include "object.hpp"
 #include "display.hpp"
