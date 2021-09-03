@@ -15,7 +15,7 @@
 
 std::vector<Circle> raymarch(
   Vec2 point,
-  const std::vector<Circle> objects,
+  const std::vector<Object*> objects,
   Vec2 direction
 ){
   direction.y = -direction.y;
@@ -37,9 +37,9 @@ std::vector<Circle> raymarch(
   while (i < depth){
     distance = INFINITY;
 
-    for (auto i : objects)
-      if (i.signedDistance(point) < distance)
-        distance = i.signedDistance(point);
+    for (auto &i : objects)
+      if (i->signedDistance(point) < distance)
+        distance = i->signedDistance(point);
 
     if (distance < minRadius)
       return result;
@@ -67,11 +67,11 @@ Vector2 WtoS(Vector2 position){
 int main(){
   Vec2 point = {0., 1.};
 
-  std::vector<Circle> x;
+  std::vector<Object*> x;
 
-  x.push_back((Circle){25., 80., 20.});
-  x.push_back((Circle){25., 100., 100.});
-  x.push_back((Circle){30., -20., 40.});
+  x.push_back(new (Circle){25., 80., 20.});
+  x.push_back(new (Circle){25., 100., 100.});
+  x.push_back(new (Circle){30., -20., 40.});
 
   Display screen(
     screenWidth,
@@ -81,7 +81,7 @@ int main(){
   );
 
   for (auto &i : x)
-    screen.attachShape(&i);
+    screen.attachShape(i);
 
   while (!WindowShouldClose()){
     if (IsKeyDown(KEY_RIGHT)) point.x += 2.0f;

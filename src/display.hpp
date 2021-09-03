@@ -6,7 +6,7 @@
 
 class Display{
 private:
-  std::vector<Circle*> shapes;
+  std::vector<Object*> shapes;
   int screenWidth, screenHeight;
 
   Vector2 WtoS(Vector2);
@@ -14,7 +14,7 @@ private:
 public:
 
   Display(int, int, const char*, int);
-  void attachShape(Circle*);
+  void attachShape(Object*);
   void drawShape();
   void closeScreen();
 };
