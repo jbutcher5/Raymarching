@@ -65,13 +65,14 @@ Vector2 WtoS(Vector2 position){
 
 
 int main(){
-  Vec2 point = {0., 1.};
+  Vec2 point = {0., 0.};
 
   std::vector<Object*> x;
 
   x.push_back(new (Circle){25., 80., 20.});
   x.push_back(new (Circle){25., 100., 100.});
   x.push_back(new (Circle){30., -20., 40.});
+  x.push_back(new (Square){-80., -60., 20., 20.});
 
   Display screen(
     screenWidth,
@@ -89,7 +90,7 @@ int main(){
     if (IsKeyDown(KEY_UP)) point.y -= 2.0f;
     if (IsKeyDown(KEY_DOWN)) point.y += 2.0f;
 
-    std::vector<Circle> traces = raymarch(point, x, (Vec2){1,1});
+    std::vector<Circle> traces = raymarch(point, x, (Vec2){1,0});
 
     BeginDrawing();
     ClearBackground(RAYWHITE);
