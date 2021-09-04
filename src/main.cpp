@@ -9,8 +9,8 @@
 #define screenHeight 450
 #define screenTitle "[Example] Ray Marching"
 #define screenFPS 60
-#define minRadius 2
-#define depth 200
+#define minRadius .02
+#define depth 10
 
 
 std::vector<Circle> raymarch(
@@ -90,14 +90,21 @@ int main(){
     if (IsKeyDown(KEY_UP)) point.y -= 2.0f;
     if (IsKeyDown(KEY_DOWN)) point.y += 2.0f;
 
-    std::vector<Circle> traces = raymarch(point, x, (Vec2){1,0});
+    Vec2 direction = {1,0};
+
+    for (double i = 0; i < 360; i++){
+      std::vector<Circle> traces = raymarch(point, x, direction.rotate(i));
+
+      if (traces.size() > 0 && traces.back().radius<2)
+        DrawRectangleV(WtoS((traces.back().pos - (Vec2){4, 4}).expose()) , (Vector2){8,8}, (Color){20, 20, 200, 255});
+    }
 
     BeginDrawing();
     ClearBackground(RAYWHITE);
     DrawCircleV(WtoS(point.expose()), 2, RED);
 
-    for (Circle i : traces)
-      DrawCircleV(WtoS(i.pos.expose()), i.radius, (Color){20, 20, 200, 50});
+    //for (Circle i : traces)
+    //  DrawCircleV(WtoS(i.pos.expose()), i.radius, (Color){20, 20, 200, 50});
 
     screen.drawShape();
     EndDrawing();

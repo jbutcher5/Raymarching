@@ -81,4 +81,8 @@ struct Vec2 : public Vector2{
 
     return newPoint.rotate(th);
   }
+
+  float length() const{
+    return std::sqrt(power2(x) + power2(y));
+  }
 };
