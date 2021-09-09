@@ -2,7 +2,7 @@
 #include <raylib.h>
 #include <cmath>
 
-#define power2(x) (x)*(x)
+#define power2(x) ((x)*(x))
 
 
 struct Vec2 : public Vector2{
