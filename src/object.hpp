@@ -34,6 +34,7 @@ struct Object{
 
   virtual float signedDistance(const Vec2& point) const = 0;
   virtual void draw(const int, const int) const = 0;
+  virtual float getIntersectRotation(const Vec2) const = 0;
 };
 
 struct Circle : public Object{
@@ -55,15 +56,29 @@ struct Circle : public Object{
   }
 
   void draw(const int screenWidth, const int screenHeight) const override{
-
     Vector2 screenPosition = {pos.x+(screenWidth/2), pos.y+(screenHeight/2)};
 
     DrawCircleV(screenPosition, this->radius, GREEN);
+  }
+
+  float getIntersectRotation(const Vec2 point) const override{
+    float dist = sqrt(
+      power2(pos.x-point.x)+power2(pos.y-point.y)
+    );
+
+    float diff = sqrt(power2(dist)+power2(radius));
+
+    float numerator = power2(dist) + power2(radius) - power2(diff);
+
+    float th = numerator/(2*dist*radius);
+
+    return th;
   }
 };
 
 struct Square : public Object{
   Vec2 width;
+  float degPerSide = 90;
 
   Square(){
     Square(0., 0., 0., 0.);
