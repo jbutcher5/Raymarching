@@ -72,8 +72,12 @@ struct Circle : public Object{
 
     float th = numerator/(2*dist*radius);
 
-    return th;
+    return cos(th);
   }
+};
+
+struct TraceCircle : public Circle{
+  float th;
 };
 
 struct Square : public Object{
@@ -90,16 +94,11 @@ struct Square : public Object{
   }
 
   float signedDistance(const Vec2& point) const override{
-    //float d = (Vec2){(float)std::fmax(point.x - width.x, 0.), (float)std::fmax(point.y - width.y, 0.)}.length();
-    //std::cout << point.x - width.x << std::endl;
-
     Vec2 x = pos - point;
 
     Vec2 d = abs(x)-width;
 
     float f = (Vec2){(max(d,(Vec2){0., 0.})) + toVec2(std::fmin(std::max(d.x,d.y), 0.))}.length();
-
-    //std::cout << f << std::endl;
 
     return f;
   }
@@ -109,6 +108,41 @@ struct Square : public Object{
     screenPosition = screenPosition - width;
 
     DrawRectangleV(screenPosition.expose(), (width * toVec2(2)).expose(), GREEN);
+  }
+
+  float getIntersectRotation(const Vec2 point) const override{
+    float dist = sqrt(
+      power2(pos.x-point.x)+power2(pos.y-point.y)
+    );
+
+    float diff = sqrt(power2(width.y)+power2(dist));
+
+    float numerator = power2(dist) + power2(width.y) - power2(diff);
+
+    float th = numerator/(2*dist*width.y);
+
+    th = cos(th);
+
+    float result;
+    size_t coveredSides = 0;
+
+    // Improve at later date.
+
+    if (th > 45)
+      coveredSides++;
+
+    if (th > 135)
+      coveredSides++;
+
+    if (th > 225)
+      coveredSides++;
+
+    if (th > 315)
+      coveredSides++;
+
+    result = degPerSide * coveredSides;
+
+    return result;
   }
 
 };
