@@ -75,13 +75,7 @@ struct Circle : public Object{
 
     float numerator = power2(b) + power2(c) - power2(a);
 
-    float th = acos(numerator/(2*b*c))*radMul;
-
-    //LOG("z " << p1.x << " w " << p1.y);
-    //LOG("x " << p2.x << " y " << p2.y);
-    //LOG("c " << c);
-    //LOG("b " << radius);
-    //LOG("a " << a);
+    float th = abs(acos(numerator/(2*b*c))*radMul);
 
     return th;
   }
@@ -143,7 +137,7 @@ struct Square : public Object{
 
     float numerator = power2(b) + power2(c) - power2(a);
 
-    float th = acos(numerator/(2*b*c))*radMul;
+    float th = abs(acos(numerator/(2*b*c))*radMul);
 
     float result;
     size_t coveredSides = 0;
