@@ -110,18 +110,12 @@ int main(){
       if (traces.size() > 0 && traces.back().radius<2){
         Rectangle rec = {WtoS(traces.back().pos).x, WtoS(traces.back().pos).y, 4, 4};
         DrawRectanglePro(rec, (Vector2){2,2}, traces.back().th, (Color){20, 20, 200, 255});
-        //LOG(traces.back().th);
       }
     }
 
     BeginDrawing();
     ClearBackground(RAYWHITE);
     DrawCircleV(WtoS(point.expose()), 2, RED);
-
-    //LOG(point.x << " " << point.y);
-
-    //for (Circle i : traces)
-    //  DrawCircleV(WtoS(i.pos.expose()), i.radius, (Color){20, 20, 200, 50});
 
     screen.drawShape();
     EndDrawing();
