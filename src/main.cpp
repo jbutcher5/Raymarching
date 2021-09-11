@@ -13,14 +13,14 @@
 #define depth 20
 
 
-std::vector<Circle> raymarch(
+std::vector<TraceCircle> raymarch(
   Vec2 point,
   const std::vector<Object*> objects,
   Vec2 direction
 ){
   direction.y = -direction.y;
 
-  std::vector<Circle> result;
+  std::vector<TraceCircle> result;
 
   if (
     direction.x > 1 ||
@@ -37,21 +37,33 @@ std::vector<Circle> raymarch(
   while (i < depth){
     distance = INFINITY;
 
+    // Find Closest Object
+
+    Object* closest;
+
     for (auto &i : objects)
-      if (i->signedDistance(point) < distance)
+      if (i->signedDistance(point) < distance){
+        closest = i;
         distance = i->signedDistance(point);
+      }
+
+    // Check if it's a collision
 
     if (distance < minRadius)
       return result;
 
-    result.push_back((Circle){distance, point.x, point.y});
+    // Add point and update result store with new TraceCircle
+
+    result.push_back((TraceCircle){distance, point.x, point.y, closest->getIntersectRotation(point)});
+
+    //LOG(closest->getIntersectRotation(point));
 
     point = ((Vec2){distance, distance}*direction)+point;
 
     i++;
   }
 
-  return std::vector<Circle>{};
+  return std::vector<TraceCircle>{};
 
 }
 
@@ -93,17 +105,20 @@ int main(){
     Vec2 direction = {1,0};
 
     for (double i = 0; i < 360; i++){
-      std::vector<Circle> traces = raymarch(point, x, direction.rotate(i));
+      std::vector<TraceCircle> traces = raymarch(point, x, direction.rotate(i));
 
       if (traces.size() > 0 && traces.back().radius<2){
         Rectangle rec = {WtoS(traces.back().pos).x, WtoS(traces.back().pos).y, 4, 4};
-        DrawRectanglePro(rec, (Vector2){2,2}, 0, (Color){20, 20, 200, 255});
+        DrawRectanglePro(rec, (Vector2){2,2}, traces.back().th, (Color){20, 20, 200, 255});
+        //LOG(traces.back().th);
       }
     }
 
     BeginDrawing();
     ClearBackground(RAYWHITE);
     DrawCircleV(WtoS(point.expose()), 2, RED);
+
+    //LOG(point.x << " " << point.y);
 
     //for (Circle i : traces)
     //  DrawCircleV(WtoS(i.pos.expose()), i.radius, (Color){20, 20, 200, 50});

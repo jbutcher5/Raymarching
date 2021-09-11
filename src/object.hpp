@@ -5,7 +5,9 @@
 #include <raylib.h>
 #include <iostream>
 
+#define LOG(x) std::cout << x << std::endl
 #define toVec2(x) (Vec2){x, x}
+#define radMul 180/PI
 
 static Vec2 abs(Vec2 x){
   return (Vec2){std::abs(x.x), std::abs(x.y)};
@@ -62,22 +64,41 @@ struct Circle : public Object{
   }
 
   float getIntersectRotation(const Vec2 point) const override{
-    float dist = sqrt(
-      power2(pos.x-point.x)+power2(pos.y-point.y)
-    );
+    Vec2 p1 = abs(pos);
+    Vec2 p2 = abs(point);
 
-    float diff = sqrt(power2(dist)+power2(radius));
+    float c = (p1-p2).length();
 
-    float numerator = power2(dist) + power2(radius) - power2(diff);
+    float b = radius;
 
-    float th = numerator/(2*dist*radius);
+    float a = (point-(pos+(Vec2){0, b})).length();
 
-    return cos(th);
+    float numerator = power2(b) + power2(c) - power2(a);
+
+    float th = acos(numerator/(2*b*c))*radMul;
+
+    //LOG("z " << p1.x << " w " << p1.y);
+    //LOG("x " << p2.x << " y " << p2.y);
+    //LOG("c " << c);
+    //LOG("b " << radius);
+    //LOG("a " << a);
+
+    return th;
   }
 };
 
 struct TraceCircle : public Circle{
   float th;
+
+  TraceCircle(){
+    TraceCircle(0., 0., 0., 0.);
+  }
+
+  TraceCircle(float rad, float x, float y, float th){
+    this->radius = rad;
+    this->pos.set(x, y);
+    this->th = th;
+  }
 };
 
 struct Square : public Object{
@@ -111,17 +132,18 @@ struct Square : public Object{
   }
 
   float getIntersectRotation(const Vec2 point) const override{
-    float dist = sqrt(
-      power2(pos.x-point.x)+power2(pos.y-point.y)
-    );
+    Vec2 p1 = abs(pos);
+    Vec2 p2 = abs(point);
 
-    float diff = sqrt(power2(width.y)+power2(dist));
+    float c = (p1-p2).length();
 
-    float numerator = power2(dist) + power2(width.y) - power2(diff);
+    float b = width.y;
 
-    float th = numerator/(2*dist*width.y);
+    float a = (point-(pos+(Vec2){0, b})).length();
 
-    th = cos(th);
+    float numerator = power2(b) + power2(c) - power2(a);
+
+    float th = acos(numerator/(2*b*c))*radMul;
 
     float result;
     size_t coveredSides = 0;
